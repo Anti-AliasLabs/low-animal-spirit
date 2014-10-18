@@ -1,4 +1,5 @@
 #include "HT1632.h"
+#include <Bridge.h>
 
 #define DATA 2
 #define WR   3
@@ -10,16 +11,32 @@
 // use this line for two matrices!
 HT1632LEDMatrix matrix = HT1632LEDMatrix(DATA, WR, CS, CS2);
 
-String tweet = "Low Animal Spirit";
+String tweet = "Phabulous sistine says chapel  *** ";
 int numDisplays = 2;
 int textX = 0;
+int stringIndex = 0;
+
+char tweetValue[4];    // incoming storage of tweet
+int lastTweetCount = 0; // keep track of number of tweets
+unsigned long lastBubble;
+char tweetText[141];
 
 void setup() {
-  Serial.begin(9600);
-  matrix.begin(HT1632_COMMON_16NMOS);  
+  Bridge.begin();    // initialise Bridge
+
+  if (debugMode) {
+    // we don't want Serial when deployed
+    // it will make the microcontroller hang
+    // waiting for a response
+    Serial.begin(9600);
+    while ( !Serial );
+  }
+
+
+  matrix.begin(HT1632_COMMON_16NMOS);
   matrix.fillScreen();
   delay(500);
-  matrix.clearScreen(); 
+  matrix.clearScreen();
 
   // set up for text display
   matrix.setTextSize(1.5);    // size 1 == 8 pixels high
@@ -27,18 +44,23 @@ void setup() {
 }
 
 void loop() {
-  String tempString = tweet.substring(0, 2*numDisplays);
-  
+  // Read command output
+  Bridge.get("tweets", tweetValue, 4);
+  Bridge.get("text", tweetText, 141);
+  int tweets = atoi(tweetValue);
 
-  matrix.fillRect(0, 0, 24*numDisplays, 16, 0);
-  matrix.setCursor(textX, 4);   
-  matrix.print(tempString);
+  String tempString = tweet.substring(stringIndex, stringIndex + (2 * numDisplays));
+  int tweetLength = tweet.length();
+
+  matrix.fillRect(0, 0, 24 * numDisplays, 16, 0);
+  matrix.setCursor(textX, 4);
+  matrix.print(tweetText);
   matrix.writeScreen();
 
-  textX++;                 // go to next position
-  textX = textX%(24*numDisplays);  // don't go off the end
+  // increment/decrement counters
+  textX--;                 // go to next position
+  textX = textX % (tweetLength + (numDisplays * 48)); // don't go off the end
 
-  delay(1000);
+  delay(300);
 }
-
 
