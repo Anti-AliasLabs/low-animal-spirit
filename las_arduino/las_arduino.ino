@@ -10,41 +10,35 @@
 // use this line for two matrices!
 HT1632LEDMatrix matrix = HT1632LEDMatrix(DATA, WR, CS, CS2);
 
+String tweet = "Low Animal Spirit";
+int numDisplays = 2;
+int textX = 0;
+
 void setup() {
   Serial.begin(9600);
   matrix.begin(HT1632_COMMON_16NMOS);  
   matrix.fillScreen();
   delay(500);
   matrix.clearScreen(); 
+
+  // set up for text display
+  matrix.setTextSize(1.5);    // size 1 == 8 pixels high
+  matrix.setTextColor(1);   // 'lit' LEDs
 }
 
 void loop() {
-  for (uint8_t y=0; y<matrix.height(); y++) {
-    for (uint8_t x=0; x< matrix.width(); x++) {
-      matrix.setPixel(x, y);
-      matrix.writeScreen();
-    }
-  }
-  // blink!
-  matrix.blink(true);
-  delay(2000);
-  matrix.blink(false);
+  String tempString = tweet.substring(0, 2*numDisplays);
   
-  // Adjust the brightness down 
-  for (int8_t i=15; i>=0; i--) {
-   matrix.setBrightness(i);
-   delay(100);
-  }
-  // then back up
-  for (uint8_t i=0; i<16; i++) {
-   matrix.setBrightness(i);
-   delay(100);
-  }
 
-  for (uint8_t y=0; y<matrix.height(); y++) {
-    for (uint8_t x=0; x< matrix.width(); x++) {
-      matrix.clrPixel(x, y);
-      matrix.writeScreen();
-    }
-  }
+  matrix.fillRect(0, 0, 24*numDisplays, 16, 0);
+  matrix.setCursor(textX, 4);   
+  matrix.print(tempString);
+  matrix.writeScreen();
+
+  textX++;                 // go to next position
+  textX = textX%(24*numDisplays);  // don't go off the end
+
+  delay(1000);
 }
+
+
