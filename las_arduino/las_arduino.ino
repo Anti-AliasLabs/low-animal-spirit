@@ -14,7 +14,6 @@
 
 HT1632LEDMatrix matrix = HT1632LEDMatrix(DATA, WR, CS0, CS1, CS2, CS3, CS4, CS5, CS6, CS7);
 
-String tweet = "1 2 3 4 5 6 7 8 9 0  *** ";
 int numDisplays = 8;
 int textX = 0;
 int stringIndex = 0;
@@ -28,9 +27,9 @@ boolean debugMode = false;
 
 
 void setup() {
-  /*Bridge.begin();    // initialise Bridge
+  Bridge.begin();    // initialise Bridge
 
-  if (debugMode) {
+  /*if (debugMode) {
     // we don't want Serial when deployed
     // it will make the microcontroller hang
     // waiting for a response
@@ -51,26 +50,32 @@ void setup() {
   // set up for text display
   matrix.setTextSize(1.5);    // size 1 == 8 pixels high
   matrix.setTextColor(1);   // 'lit' LEDs
+  
+  // start with string for waiting
+  String startString = "1 2 3 4 5 6 7 8 9 0  *** ";
+  startString.toCharArray(tweetText, 141);
 }
 
 void loop() {
   // Read command output
-  //Bridge.get("tweets", tweetValue, 4);
-  //Bridge.get("text", tweetText, 141);
-  //int tweets = atoi(tweetValue);
+  Bridge.get("tweets", tweetValue, 4);
+  Bridge.get("text", tweetText, 141);
+  int tweets = atoi(tweetValue);
 
-  String tempString = tweet.substring(stringIndex, stringIndex + (2 * numDisplays));
-  int tweetLength = tweet.length();
+  //String tempString = tweetText.substring(stringIndex, stringIndex + 20);
+  //int tweetLength = tweetText.length();
 
   matrix.fillRect(0, 0, 24 * numDisplays, 16, 0);
   matrix.setCursor(textX, 4);
-  matrix.print(tweet);
+  for(int i=0; i<141; i++) {
+    matrix.print(tweetText[i]);
+  }
   matrix.writeScreen();
 
   // increment/decrement counters
   textX--;                 // go to next position
-  textX = textX % (tweetLength + (numDisplays * 48)); // don't go off the end
+  textX = textX % (140 + (numDisplays * 48)); // don't go off the end
 
-  delay(100);
+  delay(50);
 }
 

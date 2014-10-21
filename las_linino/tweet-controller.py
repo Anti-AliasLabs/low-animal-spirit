@@ -29,14 +29,14 @@ import simplejson
 
 class LowAnimalSpiritStreamer(twython.TwythonStreamer):
     tweetCounter = 0
-    #value = bridgeclient() 
+    value = bridgeclient() 
     def on_success(self, data):
         if 'text' in data:
             print data['text'].encode('utf-8') 
-            #self.tweetCounter+=1
-            #self.tweetCounter = self.tweetCounter%1000
-            #self.value.put('tweets', "%03s"%self.tweetCounter)
-            #self.value.put('text', data['text'])
+            self.tweetCounter+=1
+            self.tweetCounter = self.tweetCounter%1000
+            self.value.put('tweets', "%03s"%self.tweetCounter)
+            self.value.put('text', data['text'])
             
                           
 
@@ -117,4 +117,5 @@ print 'Starting...'
 print 'Starting Tweet Listener'
 
 stream = LowAnimalSpiritStreamer(APP_KEY, APP_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
-stream.user(stream.user(**{'with':'user'}))
+#stream.user(stream.user(**{'with':'user'}))
+stream.user()
