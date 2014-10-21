@@ -8,7 +8,7 @@ Setting up the Yun (upgraded to 1.5.1)
 --------------------------------------
 * Setup network connection (whether ethernet or wifi)
 * SSH into Yun
-* Update opkg, install easy_install, ssl, pip for Python
+* Update opkg, install easy_install, and ssl for Python
 
 `> opkg update`
 
@@ -19,6 +19,7 @@ Setting up the Yun (upgraded to 1.5.1)
 * Install twython and simplejson
 
 `> easy_install twython`
+
 `> easy_install simplejson`
 
 * scp tweet-controller.py and credentials.py onto Yun
@@ -28,6 +29,7 @@ Set up to launch at boot
 ------------------------
 * The script `tweetinit` should be placed in `/etc/init.d/` 
 * Then run `/etc/init.d/tweetinit enable` to generate a symlink to `/etc/rc.d/`.
+* You may need to change the permissions of tweetinit to 755.
 
 
 `tweet-controller.py` is launched at boot via `/etc/init.d/tweetinit`. 
@@ -37,3 +39,6 @@ Due to still not understood reasons, the python script can only be launched manu
 Additionally, some other interaction with the network needs to happen before launching the Python script. Here, Twitter is first pinged before starting Python.
 
 
+Microcontroller
+---------------
+Uses Adafruit's HT1632 and GFX libraries. The HT1632 library uses the code in pull request https://github.com/adafruit/HT1632/pull/2/files
