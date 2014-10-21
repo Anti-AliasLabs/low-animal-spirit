@@ -27,16 +27,16 @@ from twython.streaming.api import (_transparent_params,
 import simplejson
                                               
 
-class TeamBubbleStreamer(twython.TwythonStreamer):
+class LowAnimalSpiritStreamer(twython.TwythonStreamer):
     tweetCounter = 0
-    value = bridgeclient() 
+    #value = bridgeclient() 
     def on_success(self, data):
         if 'text' in data:
-            # print data['text'].encode('utf-8') 
-            self.tweetCounter+=1
-            self.tweetCounter = self.tweetCounter%1000
-            self.value.put('tweets', "%03s"%self.tweetCounter)
-            self.value.put('text', data['text'])
+            print data['text'].encode('utf-8') 
+            #self.tweetCounter+=1
+            #self.tweetCounter = self.tweetCounter%1000
+            #self.value.put('tweets', "%03s"%self.tweetCounter)
+            #self.value.put('text', data['text'])
             
                           
 
@@ -45,8 +45,8 @@ class TeamBubbleStreamer(twython.TwythonStreamer):
 
         # Want to stop trying to get data because of the error?
         # Uncomment the next line!
-        self.value.put('text', '401')
-        self.disconnect()
+        #self.value.put('text', '401')
+        #self.disconnect()
 
     # namespace conflicts with json modules between Bridge.py and 
     # Twython are resolved through this rather gross hack
@@ -116,12 +116,5 @@ print 'Starting...'
 # time.sleep(300)
 print 'Starting Tweet Listener'
 
-stream = TeamBubbleStreamer(APP_KEY, APP_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
-# stream.statuses.filter(track='#teambubbles')
-stream.status.get_user_timeline(=lowanimalspirits)
-
-# print 'Trying again'
-# time.sleep(120)
-# streamSecondChance = TeamBubbleStreamer(APP_KEY, APP_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
-# streamSecondChance.statuses.filter(track='#teambubbles')
-# stream.user()
+stream = LowAnimalSpiritStreamer(APP_KEY, APP_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
+stream.user()
