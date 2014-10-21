@@ -19,7 +19,6 @@ Setting up the Yun (upgraded to 1.5.1)
 * Install twython and simplejson
 
 `> easy_install twython`
-
 `> easy_install simplejson`
 
 * scp tweet-controller.py and credentials.py onto Yun
@@ -31,8 +30,7 @@ Set up to launch at boot
 * Then run `/etc/init.d/tweetinit enable` to generate a symlink to `/etc/rc.d/`.
 
 
-`tweet-controller.py` is launched at boot via `/etc/init.d/tweetinit`. `tweet-controller.py` listens to the filtered Twitter stream that containes '#teambubbles'. The Bridge is used to communicate with the microcontroller.
-
+`tweet-controller.py` is launched at boot via `/etc/init.d/tweetinit`. 
 
 Due to still not understood reasons, the python script can only be launched manually via ssh or automatically via init.d. The script won't successfully authenticate to Twitter if launched via `rc.local`. It seems that the ethernet/Wifi interface won't be fully launched in time.
 
