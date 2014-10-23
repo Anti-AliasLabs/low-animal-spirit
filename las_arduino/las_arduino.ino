@@ -37,12 +37,15 @@ int tweetCounter = 0;
 
 //-------------------------------------------
 void setup() {
-  Bridge.begin();    // initialise Bridge
-  Serial.begin(9600);
-  while (!Serial) {
 
+  if (debugMode) {
+    Serial.begin(9600);
+    while (!Serial) {
+
+    }
+    Serial.println("Beginning bridge");
   }
-
+  Bridge.begin();    // initialise Bridge
   matrix.begin(HT1632_COMMON_16NMOS);
 
   // set up for text display
@@ -50,9 +53,8 @@ void setup() {
   matrix.setTextColor(1);   // 'lit' LEDs
 
   // start with string for waiting
-  
-  startString.toCharArray(tweetText, 141);
 
+  startString.toCharArray(tweetText, 141);
 
   for (int i = 0; i < 35; i++ ) {
     t += nextChar();
@@ -61,22 +63,6 @@ void setup() {
 
 //-------------------------------------------
 void loop() {
-  // if new tweet came in
-  /*if ( tweets != lastTweetCount ) {
-    matrix.clearScreen();
-    for (int i = 0; i < numDisplays * 24; i += 6) {
-      matrix.fillRect(0, 0, 24 * numDisplays, 16, 0);
-      matrix.setCursor(i, 4);
-      matrix.print("***");
-      matrix.writeScreen();
-    }
-
-    textX = numDisplays * 24;
-    lastTweetCount = tweets;
-  }
-
-  */
-
   // scroll width of one character
   for (int tX = 0; tX > -6; tX--) {
     matrix.fillRect(0, 0, 24 * numDisplays, 16, 0);
@@ -86,7 +72,9 @@ void loop() {
     matrix.writeScreen();
     delay(1);
   }
-  Serial.println(t);
+  if (debugMode) {
+    Serial.println(t);
+  }
   // progress through char array
   t = t.substring(1);
   t += nextChar();
@@ -102,14 +90,15 @@ char nextChar() {
     tweetCounter++;
     // if number of tweets have gone by
     if ( tweetCounter > 1 ) {
-      lenTweet = 20;
+      lenTweet = 21;
       String handle = " @LowAnimalSpirit *** ";
       handle.toCharArray( tweetText, 141 );
 
       tweetCounter = 0;
       displayHandle = true;
-
-      Serial.println("---------display handle---------");
+      if ( debugMode) {
+        Serial.println("---------display handle---------");
+      }
     }
   }
   // if completed buffer and displaying handle
@@ -122,17 +111,22 @@ char nextChar() {
       for (int i = 0; i < 141; i++) {
         tweetText[i] = ' ';
       }
-
-      Serial.println("---------reading in next tweet---------");
+      if ( debugMode) {
+        Serial.println("---------reading in next tweet---------");
+      }
       // read in waiting tweet
       Bridge.get("text", tweetText, 141);
-      Bridge.get("tweets", tweetValue, 4);
-      lenTweet = atoi(tweetValue) - 1;
+      Bridge.get("tweetlength", tweetValue, 3);
+      lenTweet = atoi(tweetValue)-1;
+      //lenTweet = 30;
+      Serial.println(tweetText);
       Serial.println(tweetValue);
-      Serial.println(lenTweet);
-      if( lenTweet < 2 ){
-          startString.toCharArray(tweetText, 141);
-          lenTweet = 26;
+      if ( atoi(tweetValue) < 2 ) {
+        if ( debugMode) {
+          Serial.println("---------keep waiting---------");
+        }
+        startString.toCharArray(tweetText, 141);
+        lenTweet = 26;
       }
       tweetCounter = 0;
       displayHandle = false;

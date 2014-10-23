@@ -33,12 +33,16 @@ class LowAnimalSpiritStreamer(twython.TwythonStreamer):
     def on_success(self, data):
         if 'text' in data:
             trimmedTweet = data['text'].rstrip()
-            trimmedTweet = trimmedTweet + " *** "
-            tweetLen = len(trimmedTweet)
-            print trimmedTweet.encode('utf-8')[0:tweetLen]
+            trimmedTweet = trimmedTweet + " ***  "
+            self.tweetLen = len(trimmedTweet)
+            print trimmedTweet.encode('utf-8')[0:self.tweetLen]
+            print self.tweetLen
+            print "%03s"%self.tweetLen
 
-            self.tweetCounter = self.tweetLen%1000
-            self.value.put('tweets', "%03s"%self.tweetLen)
+            #self.tweetCounter = self.tweetLen%1000
+            self.tweetCounter = self.tweetLen
+            self.value.put('tweetlength', "%03s"%self.tweetLen)
+            #self.value.put('tweetlength', str(self.tweetLen))
             self.value.put('text', trimmedTweet)
             
                           
@@ -120,5 +124,5 @@ print 'Starting...'
 print 'Starting Tweet Listener'
 
 stream = LowAnimalSpiritStreamer(APP_KEY, APP_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
-#stream.user(stream.user(**{'with':'user'}))
-stream.user()
+stream.user(stream.user(**{'with':'user'}))
+#stream.user()
