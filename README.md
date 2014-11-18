@@ -25,18 +25,18 @@ Setting up the Yun (upgraded to 1.5.1)
 * scp tweet-controller.py and credentials.py onto Yun
 * Put token information in credentials.py
 
-Set up to launch at boot
+To start Python Twitter script
 ------------------------
-* The script `tweetinit` should be placed in `/etc/init.d/` 
-* Then run `/etc/init.d/tweetinit enable` to generate a symlink to `/etc/rc.d/`.
-* You may need to change the permissions of tweetinit to 755.
+* ssh to the Linino side of the Yun
 
+`> ssh root@arduino.local`
 
-`tweet-controller.py` is launched at boot via `/etc/init.d/tweetinit`. 
+* the password is arduino
+* once logged in start the script
 
-Due to still not understood reasons, the python script can only be launched manually via ssh or automatically via init.d. The script won't successfully authenticate to Twitter if launched via `rc.local`. It seems that the ethernet/Wifi interface won't be fully launched in time.
+`> python tweet-controller.py &`
 
-Additionally, some other interaction with the network needs to happen before launching the Python script. Here, Twitter is first pinged before starting Python.
+* once a new tweet is read, it should be printed to the screen along with the length of the tweet in characters (this is the data passed to the microcontroller side of the Yun)
 
 
 Microcontroller
